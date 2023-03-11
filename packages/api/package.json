@@ -6,7 +6,11 @@
   "scripts": {
     "build": "tsc --project ./",
     "dev": "nodemon src/index.ts",
-    "prod": "node dist/index.js"
+    "prod": "node dist/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "clean": "rimraf **/*.log dist",
+    "test": "jest"
   },
   "dependencies": {
     "express": "^4.18.2",
