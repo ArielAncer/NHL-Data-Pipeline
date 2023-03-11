@@ -1,6 +1,6 @@
 import { CustomLogger } from "../../common/utilities/logger";
 
-const logger = new CustomLogger("nhl-data-pipeline").getInstance();
+const logger = CustomLogger.getInstance("nhl-data-pipeline");
 
 const start = () => {
   logger.info("Data ingest pipeline process started..");

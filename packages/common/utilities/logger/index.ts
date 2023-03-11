@@ -1,38 +1,45 @@
 import winston, { format, type Logger } from "winston";
 const { printf, label, timestamp, combine } = format;
 
+const LOG_DIRECTORY = "logs";
+
 export class CustomLogger {
-  _serviceName: string;
-  _format: winston.Logform.Format;
-  _dir = "logs";
-  _instance: Logger;
+  private static _instance: Logger;
 
-  constructor(serviceName: string) {
-    this._serviceName = serviceName;
-    this._format = combine(
-      label({ label: this._serviceName }),
-      timestamp(),
-      printf(({ level, message, label, timestamp }) => {
-        return `[${label}] ${timestamp} ${level}: ${message}`;
-      })
-    );
+  private constructor() {}
 
-    this._instance = this._init();
-  }
+  static getInstance = (serviceName: string) => {
+    if (!CustomLogger._instance) {
+      const format = combine(
+        label({ label: serviceName }),
+        timestamp(),
+        printf(({ level, message, label, timestamp }) => {
+          return `[${label}] ${timestamp} ${level}: ${message}`;
+        })
+      );
 
-  getInstance = () => this._instance;
+      this._init(serviceName, format);
+    }
 
-  private _init = (): Logger => {
+    return CustomLogger._instance;
+  };
+
+  private static _init = (
+    serviceName: string,
+    format: winston.Logform.Format
+  ) => {
     const logger = winston.createLogger({
       level: "info",
-      format: this._format,
-      defaultMeta: { service: this._serviceName },
+      format: format,
+      defaultMeta: { service: serviceName },
       transports: [
         new winston.transports.File({
-          filename: `${this._dir}/error.log`,
+          filename: `${LOG_DIRECTORY}/error.log`,
           level: "error",
         }),
-        new winston.transports.File({ filename: `${this._dir}/combined.log` }),
+        new winston.transports.File({
+          filename: `${LOG_DIRECTORY}/combined.log`,
+        }),
       ],
     });
 
@@ -40,11 +47,11 @@ export class CustomLogger {
     if (process.env.NODE_ENV !== "production") {
       logger.add(
         new winston.transports.Console({
-          format: this._format,
+          format,
         })
       );
     }
 
-    return logger;
+    CustomLogger._instance = logger;
   };
 }

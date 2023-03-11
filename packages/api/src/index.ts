@@ -3,7 +3,7 @@ import router from "./routes";
 import swaggerDocs from "./swagger";
 import { CustomLogger } from "../../common/utilities/logger";
 
-const logger = new CustomLogger("nhl-api").getInstance();
+const logger = CustomLogger.getInstance("nhl-api");
 
 const app = express();
 const port = 4000;

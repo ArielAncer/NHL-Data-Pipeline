@@ -1,3 +1,3 @@
 ## Architectural Decisions Index
 
-<!-- - Arch descisions to go here -->
+- [Log Design Pattern](arch-decisions/Log Design Pattern.md)
