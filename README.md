@@ -20,14 +20,26 @@ Shared interfaces, enums, models and utilities between packages.
 
 ## Technologies ( Shared )
 
-- Lerna
 - Docker
 - NodeJS
 - TypeScript
 - PostGres
+
+### Code Management
+
+- Lerna
 - ESLint
 - Prettier
+- Lint-Staged
 
-### Architectural Decisions
+### Testing
+
+- Jest
+
+### Debug
+
+- Winston
+
+## Architectural Decisions
 
 - See the following [index](arch-decisions/index.md)

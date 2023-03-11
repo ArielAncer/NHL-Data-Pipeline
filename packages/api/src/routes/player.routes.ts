@@ -1,7 +1,7 @@
-import express from "express";
-import { getPlayerStatsHandler } from "../controllers/player.controller";
+import express from 'express'
+import { getPlayerStatsHandler } from '../controllers/player.controller'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @openapi
@@ -26,6 +26,6 @@ const router = express.Router();
  *         description: Bad request
  */
 
-router.get("/api/playerStats", getPlayerStatsHandler);
+router.get('/api/playerStats', getPlayerStatsHandler)
 
-export default router;
+export default router

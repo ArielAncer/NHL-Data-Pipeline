@@ -8,9 +8,7 @@ So that I may organize my code for the NHL data ingest pipeline
 
 ### Notes
 
-- Unit test framework to be added in subsequent feature
-- Linting to be added in subsequent feature
-- Docker containerization to be added in subsequent feature
+- None
 
 ### Technical Notes
 
