@@ -43,3 +43,14 @@ Shared interfaces, enums, models and utilities between packages.
 ## Architectural Decisions
 
 - See the following [index](arch-decisions/index.md)
+
+## Local Development
+
+### Requirements
+
+- Yarn package management installed on machine
+- Docker installed on machine & Docker daemon running
+
+### Instructions
+
+- Run `yarn` and then run `yarn dev`

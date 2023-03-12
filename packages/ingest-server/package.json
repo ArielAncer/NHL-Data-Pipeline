@@ -5,8 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dc": "docker compose -f docker/docker-compose.yml",
-    "dc:up": "yarn dc up --remove-orphans",
+    "dc:up": "yarn dc up -d --remove-orphans",
     "build": "tsc --project ./",
+    "predev": "yarn dc:up",
     "dev": "nodemon src/index.ts",
     "prod": "node dist/index.js",
     "lint": "eslint",
