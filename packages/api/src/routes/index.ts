@@ -1,5 +1,5 @@
-import express from "express";
-import playerRoutes from "./player.routes";
+import express from 'express';
+import playerRoutes from './player.routes';
 const router = express.Router();
 
 /**
@@ -13,7 +13,7 @@ const router = express.Router();
  *       200:
  *         description: API is running
  */
-router.get("/healthcheck", (req, res) => res.sendStatus(200));
+router.get('/healthcheck', (req, res) => res.sendStatus(200));
 
 router.use(playerRoutes);
 
