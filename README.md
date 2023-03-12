@@ -28,6 +28,7 @@ Shared interfaces, enums, models and utilities between packages.
 ### Code Management
 
 - Lerna
+- Husky
 - ESLint
 - Prettier
 - Lint-Staged

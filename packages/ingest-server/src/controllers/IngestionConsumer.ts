@@ -2,8 +2,14 @@ import { dpLogger } from '..';
 import { consumer } from '../kafka/brokers/consumer';
 
 export class IngestionConsumer {
-  init = async (topic: string) => {
-    await this._consumeData(topic).catch(dpLogger.error);
+  _topic: string;
+
+  constructor(topic: string) {
+    this._topic = topic;
+  }
+
+  init = async () => {
+    await this._consumeData(this._topic).catch(dpLogger.error);
   };
 
   _consumeData = async (topic: string): Promise<void> => {

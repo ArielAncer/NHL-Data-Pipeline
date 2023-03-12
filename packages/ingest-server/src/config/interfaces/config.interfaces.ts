@@ -1,5 +1,8 @@
 interface INHLServiceConfig {
   base_url: string;
+  routes: {
+    schedule: string;
+  };
 }
 
 interface IMessageBrokerConfig {
@@ -12,5 +15,5 @@ interface IMessageBrokerConfig {
 export interface IConfig {
   nhl_service: INHLServiceConfig;
   message_broker: IMessageBrokerConfig;
-  ingest_poll_delay_ms: number;
+  ingest_poll_interval_ms: number;
 }
