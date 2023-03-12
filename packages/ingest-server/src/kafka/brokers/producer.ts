@@ -1,4 +1,4 @@
-import { type Producer } from 'kafkajs'
-import { kafka } from '..'
+import { type Producer } from 'kafkajs';
+import { kafka } from '..';
 
-export const producer: Producer = kafka.producer()
+export const producer: Producer = kafka.producer();

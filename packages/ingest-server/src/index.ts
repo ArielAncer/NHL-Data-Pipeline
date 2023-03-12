@@ -1,20 +1,22 @@
 import { CustomLogger } from '../../common/utilities/logger';
 import { IngestionConsumer } from './controllers/IngestionConsumer';
-import { IngestionProducer } from './controllers/IngestionProducer';
+import { IngestionProcessScheduler } from './controllers/IngestionProcessScheduler.ts';
 
 export const dpLogger = CustomLogger.getInstance('nhl-data-pipeline');
 
-const ingestConsumer = new IngestionConsumer();
-const ingestProducer = new IngestionProducer();
+const topic = 'nhl-game-data';
+const scheduler = new IngestionProcessScheduler(topic);
+const ingestConsumer = new IngestionConsumer(topic);
 
 const start = async () => {
-  dpLogger.info('Data ingest pipeline process started..');
+  try {
+    dpLogger.info('Data ingest pipeline process started..');
 
-  const topic = 'nhl-player-data';
-  await ingestConsumer.init(topic).catch(dpLogger.error);
-  await ingestProducer.init(topic).catch(dpLogger.error);
-
-  dpLogger.info('Data ingest pipeline process ended..');
+    await scheduler.pollApiForGameStatusChanges();
+    await ingestConsumer.init().catch(dpLogger.error);
+  } catch (e) {
+    dpLogger.error(e.message);
+  }
 };
 
 void start();

@@ -1,55 +1,56 @@
 import { dpLogger } from '..';
 import { producer } from '../kafka/brokers/producer';
-import { delay } from '../../../common/utilities/delay';
-import { config } from '../config';
-
-const INGEST_POLL_MS = config.ingest_poll_delay_ms;
+import { NHLService } from '../services/NHLService';
+import { Game } from '../../../common/interfaces';
+import { GAME_STATUS } from '../../../common/enums';
 
 export class IngestionProducer {
-  constructor() {}
-  init = async (topic: string) => {
-    while (true) {
-      // [TODO] pull data from NHL Service for schedule
-      // [TODO] save raw data to PostGres
+  _nhlService: NHLService;
+  _topic: string;
 
-      const statusChangeData = [{ message: 'sample-status-data' }];
+  constructor(topic: string) {
+    this._nhlService = new NHLService();
+    this._topic = topic;
+    this._initProducer();
+  }
 
-      if (statusChangeData.length) {
-        // [TODO] look for game status changes
-        const hasStatusChanges = true;
+  _initProducer = () => {
+    producer.connect().then((_) => {
+      dpLogger.info('Producer connected');
+    });
+  };
 
-        if (hasStatusChanges) {
-          // [TODO] get game data from NHLService
-          const sampleData = [{ message: 'sample-nhl-data' }];
-          // [TODO] establish topics per data type if required
-          await produceData(topic, sampleData);
-        }
+  _isGameLive = (game: Game) =>
+    [GAME_STATUS.Live, GAME_STATUS.LiveCritical].includes(
+      Number(game.status.statusCode)
+    );
+
+  produceGameData = async (game: Game) => {
+    try {
+      if (this._isGameLive(game)) {
+        await this._produceData(this._topic, game);
       }
+    } catch (e) {
+      dpLogger.error(e.message);
+    }
+  };
 
-      await delay(INGEST_POLL_MS);
+  _getKafkaMessage: any = (item) => {
+    return {
+      value: Buffer.from(JSON.stringify(item))
+    };
+  };
+
+  _produceData = async (topic: string, data: any): Promise<void> => {
+    try {
+      const message = this._getKafkaMessage(data);
+      await producer.send({
+        topic,
+        messages: [message]
+      });
+      dpLogger.info(`Message ${message.value} sent to Kafka Topic ${topic}`);
+    } catch (e) {
+      throw e;
     }
   };
 }
-
-const getKafkaMessage: any = (item) => {
-  return {
-    value: Buffer.from(JSON.stringify(item))
-  };
-};
-
-const produceData = async (topic: string, data: any[]): Promise<void> => {
-  await producer.connect();
-  dpLogger.info('Kafka producer connected');
-
-  for (const item of data) {
-    const message = getKafkaMessage(item);
-    await producer.send({
-      topic,
-      messages: [message]
-    });
-    dpLogger.info(`Message ${message.value} sent to Kafka Topic ${topic}`);
-  }
-
-  await producer.disconnect();
-  dpLogger.info('Kafka producer disconnected');
-};
