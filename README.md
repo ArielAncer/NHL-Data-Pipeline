@@ -9,7 +9,7 @@ A CDC ingest pipeline monorepo that pulls and stores NHL data
 Api to expose RESTful routes that allow for read only access of NHL data.
 See documentation [here](packages/api/README.md)
 
-### Data Pipeline
+### Ingest Server
 
 Change data capture ingest pipeline that pulls data from an external api and publishes it to
 a relational data store. See documentation [here](packages/data-pipeline/README.md)

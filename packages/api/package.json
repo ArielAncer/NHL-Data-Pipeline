@@ -1,14 +1,16 @@
 {
-  "name": "api",
+  "name": "@nhl-data-pipeline/api",
   "version": "1.0.0",
   "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
+    "dc": "docker compose -f docker/docker-compose.yml",
+    "dc:up": "yarn dc up --remove-orphans",
     "build": "tsc --project ./",
     "dev": "nodemon src/index.ts",
     "prod": "node dist/index.js",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "clean": "rimraf **/*.log dist",
     "test": "jest"
   },

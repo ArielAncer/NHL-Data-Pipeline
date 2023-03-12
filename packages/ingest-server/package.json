@@ -1,13 +1,15 @@
 {
-  "name": "data-pipeline",
+  "name": "@nhl-data-pipeline/ingest-server",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "dc": "docker compose -f docker/docker-compose.yml",
+    "dc:up": "yarn dc up --remove-orphans",
     "build": "tsc --project ./",
     "dev": "nodemon src/index.ts",
     "prod": "node dist/index.js",
-    "lint": "eslint .",
+    "lint": "eslint",
     "lint:fix": "eslint . --fix",
     "clean": "rimraf **/*.log dist",
     "test": "jest"
