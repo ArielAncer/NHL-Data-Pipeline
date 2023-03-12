@@ -1,9 +1,9 @@
-import express from "express";
-import router from "./routes";
-import swaggerDocs from "./swagger";
-import { CustomLogger } from "../../common/utilities/logger";
+import express from 'express';
+import router from './routes';
+import swaggerDocs from './swagger';
+import { CustomLogger } from '../../common/utilities/logger';
 
-const logger = CustomLogger.getInstance("nhl-api");
+const logger = CustomLogger.getInstance('nhl-api');
 
 const app = express();
 const port = 4000;
