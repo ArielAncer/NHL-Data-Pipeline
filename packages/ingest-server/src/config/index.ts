@@ -24,5 +24,7 @@ export const config: IConfig = {
     client_id: process.env.KAFKA_CLIENT_ID,
     consumer_group_name: process.env.KAFKA_CONSUMER_GROUP_NAME
   },
-  ingest_poll_interval_ms: Number(process.env.INGEST_POLL_INTERVAL_MS)
+  ingest_poll_interval_ms: Number(process.env.INGEST_POLL_INTERVAL_MS),
+  always_ingest_fg:
+    process.env.ALWAYS_INGEST_FG.toLowerCase() === 'true' || false
 };

@@ -54,4 +54,9 @@ Shared interfaces, enums, models and utilities between packages.
 
 ### Instructions
 
+- From the root directory
 - Run `yarn` and then run `yarn dev`
+- The project will spin up the following simultaneously:
+  - The data ingestion pipeline
+  - The Api ( accessible at http://localhost:4000/docs/ )
+  - All the respective servers & dependencies

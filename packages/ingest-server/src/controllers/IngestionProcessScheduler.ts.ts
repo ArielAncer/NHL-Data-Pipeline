@@ -36,13 +36,16 @@ export class IngestionProcessScheduler {
           if (cachedStatus) {
             const parsedCachedStatus: Status = JSON.parse(cachedStatus);
             // The game status has changed
-            if (parsedCachedStatus.statusCode !== status.statusCode) {
+            if (
+              parsedCachedStatus.statusCode !== status.statusCode ||
+              config.always_ingest_fg
+            ) {
               dpLogger.info(
                 `Game ${game.gamePk}'s status has changed from ${parsedCachedStatus.detailedState} to ${status.detailedState}`
               );
 
-              // [TODO] Fetch and map the data we want to save
-              await this._ingestProducer.produceGameData(game);
+              // Fetch and map the data we want to save
+              await this._ingestProducer.publishGameStatsData(game);
             }
           } else {
             this._redisClient.set(key, JSON.stringify(game.status));

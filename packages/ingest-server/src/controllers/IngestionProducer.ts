@@ -1,8 +1,10 @@
 import { dpLogger } from '..';
 import { producer } from '../kafka/brokers/producer';
 import { NHLService } from '../services/NHLService';
-import { Game } from '../../../common/interfaces';
+import { Game, GameData, GameStatsSchema } from '../../../common/interfaces';
 import { GAME_STATUS } from '../../../common/enums';
+import { NHLDataMapper } from '../mappers/NHLDataMapper';
+import { config } from '../config';
 
 export class IngestionProducer {
   _nhlService: NHLService;
@@ -25,10 +27,22 @@ export class IngestionProducer {
       Number(game.status.statusCode)
     );
 
-  produceGameData = async (game: Game) => {
+  _getGameStatsData = async (link: string) => {
     try {
-      if (this._isGameLive(game)) {
-        await this._produceData(this._topic, game);
+      const gameData: GameData = await this._nhlService.getGameDataForLink(
+        link
+      );
+      return NHLDataMapper.mapGameDataToStatsSchema(gameData);
+    } catch (e) {
+      dpLogger.error(e.message);
+    }
+  };
+
+  publishGameStatsData = async (game: Game) => {
+    try {
+      if (this._isGameLive(game) || config.always_ingest_fg) {
+        const data: GameStatsSchema = await this._getGameStatsData(game.link);
+        await this._publishData(this._topic, data);
       }
     } catch (e) {
       dpLogger.error(e.message);
@@ -41,7 +55,7 @@ export class IngestionProducer {
     };
   };
 
-  _produceData = async (topic: string, data: any): Promise<void> => {
+  _publishData = async (topic: string, data: any): Promise<void> => {
     try {
       const message = this._getKafkaMessage(data);
       await producer.send({

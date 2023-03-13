@@ -25,4 +25,5 @@ export interface IConfig {
   message_broker: IMessageBrokerConfig;
   nhl_data_store: IDatabaseConfig;
   ingest_poll_interval_ms: number;
+  always_ingest_fg: boolean;
 }
