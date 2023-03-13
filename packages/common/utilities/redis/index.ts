@@ -3,7 +3,6 @@ import { type Logger } from 'winston';
 
 export class RedisCache {
   private static _instance;
-  private static _logger: Logger;
 
   static getInstance = (logger: Logger) => {
     if (!RedisCache._instance) {

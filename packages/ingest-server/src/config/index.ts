@@ -1,4 +1,4 @@
-import { type IConfig } from './interfaces/config.interfaces';
+import { type IConfig } from '../../../common/interfaces/config';
 
 require('dotenv').config();
 
@@ -10,6 +10,13 @@ export const config: IConfig = {
   nhl_service: {
     base_url: process.env.NHL_API_BASE_URL,
     routes: nhlServiceRoutes
+  },
+  nhl_data_store: {
+    username: process.env.PG_USER_NAME,
+    password: process.env.PG_PASSWORD,
+    host: process.env.PG_HOST,
+    port: Number(process.env.PG_PORT),
+    database: process.env.PG_DATABASE
   },
   message_broker: {
     host: process.env.KAFKA_HOST,
