@@ -7,6 +7,18 @@ services:
     ports:
       - '6379:6379'
 
+  db:
+    image: postgres:latest
+    container_name: nhl-data-server
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nhl-core-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./init_scripts:/docker-entrypoint-initdb.d
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     hostname: zookeeper

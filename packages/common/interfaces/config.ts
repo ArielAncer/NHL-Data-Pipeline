@@ -12,8 +12,17 @@ interface IMessageBrokerConfig {
   port: number;
 }
 
+export interface IDatabaseConfig {
+  username: string;
+  password: string;
+  host: string;
+  port: number;
+  database: string;
+}
+
 export interface IConfig {
   nhl_service: INHLServiceConfig;
   message_broker: IMessageBrokerConfig;
+  nhl_data_store: IDatabaseConfig;
   ingest_poll_interval_ms: number;
 }
