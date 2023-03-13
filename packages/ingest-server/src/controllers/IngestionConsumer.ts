@@ -1,5 +1,5 @@
 import { dpLogger } from '..';
-import { Game, GameDB } from '../../../common/interfaces';
+import { Game, GameDB, GameStatsSchema } from '../../../common/interfaces';
 import { consumer } from '../kafka/brokers/consumer';
 import { NHLDatabase } from '../../../common/utilities/postgres';
 import { config } from '../config';
@@ -17,6 +17,31 @@ export class IngestionConsumer {
     await this._consumeData(this._topic).catch(dpLogger.error);
   };
 
+  _sinkDataToDatabase = async (gameStats: GameStatsSchema) => {
+    try {
+      const { game, teams, players, playerStats } = gameStats;
+      await NHLDatabase.upsertToDatabase('game_id', 'Games', game);
+
+      for (const team of teams) {
+        await NHLDatabase.upsertToDatabase('team_id', 'Teams', team);
+      }
+
+      for (const player of players) {
+        await NHLDatabase.upsertToDatabase('player_id', 'Players', player);
+      }
+
+      for (const playerStat of playerStats) {
+        await NHLDatabase.upsertToDatabase(
+          'game_id, player_id',
+          'PlayerStats',
+          playerStat
+        );
+      }
+    } catch (e) {
+      dpLogger.error(e.message);
+    }
+  };
+
   _consumeData = async (topic: string): Promise<void> => {
     await consumer.connect();
     dpLogger.info(`Kafka consumer for topic ${topic} connected`);
@@ -25,23 +50,9 @@ export class IngestionConsumer {
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
-        const game: Game = JSON.parse(message.value.toString());
-        try {
-          // Test DB Row
-          const pgGame: GameDB = {
-            game_id: game.gamePk,
-            opponent_team_id: 5,
-            assists: 6,
-            goals: 7,
-            hits: 7,
-            points: 7,
-            penalty_minutes: 7
-          };
+        const gameStats: GameStatsSchema = JSON.parse(message.value.toString());
 
-          await NHLDatabase.upsertToDatabase('game_id', 'Games', pgGame);
-        } catch (e) {
-          dpLogger.error(e.message);
-        }
+        await this._sinkDataToDatabase(gameStats);
 
         dpLogger.info(
           JSON.stringify({

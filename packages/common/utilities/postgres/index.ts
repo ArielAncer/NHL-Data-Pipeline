@@ -44,12 +44,39 @@ export class NHLDatabase {
     };
   };
 
+  static _getListOfParamsFormDict = (obj, delim: string, partDelim: string) =>
+    Object.keys(obj)
+      .filter((key) => obj[key])
+      .map((key) => {
+        return key + delim + obj[key];
+      })
+      .join(partDelim);
+
+  static getDataRowsForIds = async (
+    tableName: string,
+    queryParams: { [key: string]: string }
+  ) => {
+    try {
+      const whereClause = this._getListOfParamsFormDict(
+        queryParams,
+        ' = ',
+        ' AND '
+      );
+      let sql = `SELECT * FROM ${tableName}`;
+      if (whereClause.length) sql += ` WHERE ${whereClause}`;
+      return await NHLDatabase._instance.query(sql);
+    } catch (e) {
+      throw e;
+    }
+  };
+
   static upsertToDatabase = async (
     idColumnName: string,
     tableName: string,
     data: any
   ) => {
     try {
+      data = { ...data, modified_dt: new Date().toISOString() };
       const { values, columns, placeholders } =
         NHLDatabase._getDBQueryParamsFromObject(data);
 

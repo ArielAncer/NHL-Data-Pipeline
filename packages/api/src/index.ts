@@ -2,7 +2,10 @@ import express from 'express';
 import router from './routes';
 import swaggerDocs from './swagger';
 import { CustomLogger } from '../../common/utilities/logger';
+import { NHLDatabase } from '../../common/utilities/postgres';
+import { config } from '../config';
 
+NHLDatabase.getInstance(config);
 const logger = CustomLogger.getInstance('nhl-api');
 
 const app = express();
